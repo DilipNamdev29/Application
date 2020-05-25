@@ -1,0 +1,148 @@
+package evaluation1.ajio;
+
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.Select;
+
+public class AzureTC {
+
+	public static void main(String[] args) throws InterruptedException {
+		
+		System.setProperty("webdriver.chrome.driver", "./Drivers/chromedriver.exe");
+		System.setProperty("webdriver.chrome.silentOutput", "true");
+        ChromeOptions opt = new ChromeOptions();
+		opt.addArguments("--disable-notifications");
+		
+		DesiredCapabilities cap = new DesiredCapabilities();
+		cap.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.DISMISS);
+		opt.merge(cap);
+		
+		ChromeDriver driver = new ChromeDriver();
+		//WebDriverWait wait = new WebDriverWait(driver, 30);
+		Actions builder = new Actions(driver);
+		 
+		// Go to https://azure.microsoft.com/en-in/
+		Thread.sleep(3000);
+		driver.get("https://azure.microsoft.com/en-in/");
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		    
+		// Click on Pricing
+		Thread.sleep(3000);
+		driver.findElementById("navigation-pricing").click();
+		
+		// Click on Pricing Calculator
+		Thread.sleep(3000);
+		driver.findElementByXPath("(//a[@data-bi-id='global-navigation-secondarynav-clicked-topmenu'])[2]").click();
+				
+		// Click on Containers
+		Thread.sleep(3000);
+		driver.findElementByXPath("//button[text()='Containers']").click();
+		
+		// Select Container Instances
+		Thread.sleep(3000);
+		driver.findElementByXPath("(//span[text()='Easily run containers on Azure without managing servers'])[3]").click();
+				
+		// Click on Container Instance Added View
+		Thread.sleep(2000);
+		driver.findElementByLinkText("View").click();
+		
+		// Select Region as "South India"
+		Thread.sleep(3000);
+		WebElement allregion = driver.findElementByXPath("(//select[@class = 'select'])[1]");
+		Select region = new Select(allregion);
+		region.selectByVisibleText("South India");
+		
+ 		// Set the Duration as 180000 seconds
+		Thread.sleep(3000);
+		WebElement eleDurations = driver.findElementByXPath("//input[@aria-label = 'Seconds']");
+		eleDurations.sendKeys(Keys.CONTROL + "a");
+		eleDurations.sendKeys(Keys.DELETE);
+		Thread.sleep(3000);
+		eleDurations.sendKeys("180000");
+		
+		// Select the Memory as 4GB
+		Thread.sleep(3000);
+		WebElement allmemory = driver.findElementByXPath("(//select[@name = 'memory'])[1]");
+		Select memory = new Select(allmemory);
+		memory.selectByVisibleText("4 GB");
+		
+		// Enable SHOW DEV/TEST PRICING
+		Thread.sleep(3000);
+		driver.findElementByXPath("//span[text() = 'Show Dev/Test Pricing']").click();
+		
+		// Select Indian Rupee  as currency
+		Thread.sleep(3000);
+		WebElement allcurrency = driver.findElementByXPath("//select[@aria-label = 'Currency']");
+		Select currency = new Select(allcurrency);
+		currency.selectByVisibleText("Indian Rupee (₹)");
+		
+		// Print the Estimated monthly price
+		Thread.sleep(3000);
+		String Estimatedprice = driver.findElementByXPath("(//span[@class = 'numeric'])[6]").getText();
+		System.out.println("Estimated monthly cost: "+Estimatedprice);
+		
+		// Click on Export to download the estimate as excel
+		Thread.sleep(3000);
+		driver.findElementByXPath("//button[@class = 'calculator-button button-transparent export-button']").click();
+		
+		// Verify the downloded file in the local folder
+		Thread.sleep(7000);
+		File f = new File ("C:\\Users\\Dinesh\\Downloads\\ExportedEstimate.xlsx");
+		Thread.sleep(7000);
+		if(f.exists()) {
+		System.out.println("File Exist");
+		}
+		else
+		{
+			System.out.println("File Does not Exist");
+		}
+		
+		// Navigate to Example Scenarios and Select CI/CD for Containers
+		Thread.sleep(3000);
+		WebElement moveup =	driver.findElementByXPath("//a[text() = 'Example Scenarios']");
+	    builder.moveToElement(moveup).click().perform();
+	    driver.findElementByXPath("//span[text()='CI/CD for Containers']").click();
+				
+		// Click Add to Estimate
+	    Thread.sleep(5000);
+	    driver.findElementByXPath("//button[text()='Add to estimate']").click();
+	    
+		// Change the Currency as Indian Rupee
+	    Thread.sleep(3000);
+	    WebElement allcurrency1 = driver.findElementByXPath("//select[@aria-label = 'Currency']");
+		Select currency1 = new Select(allcurrency1);
+		currency1.selectByVisibleText("Indian Rupee (₹)");
+		
+		// Enable SHOW DEV/TEST PRICING
+		Thread.sleep(3000);
+		driver.findElementById("devtest-toggler").click();
+
+		// Export the Estimate
+		Thread.sleep(3000);
+		driver.findElementByXPath("//button[@class = 'calculator-button button-transparent export-button']").click();
+
+		// Verify the downloded file in the local folder
+		Thread.sleep(7000);
+		File f1 = new File ("C:\\Users\\Dinesh\\Downloads\\ExportedEstimate (1).xlsx");
+		Thread.sleep(7000);
+		if(f1.exists()) {
+		System.out.println("File Exist");
+		}
+		else
+		{
+				System.out.println("File does not Exist");
+		}
+		
+	}
+
+}
